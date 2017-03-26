@@ -41,6 +41,7 @@ public class Hangman {
 			numberOfMisses = numberOfMisses + 1;
 			if (numberOfMisses >= numberOfMissesAllowed) {
 				System.out.println("\nYou lose, dumbass!");
+				printTheRandomWordArray();
 				System.exit(0);
 			}
 			else {
@@ -49,12 +50,14 @@ public class Hangman {
 			}
 		}
 	}
+
 	// make an array of chars with the letters of the randomWord string
 	public void randomWordToArray() {
 		for (int i = 0; i < randomWord.length(); i++) {
 			theRandomWord[i] = randomWord.charAt(i);
 		}
 	}
+
 	// make an array of chars showing their correct guesses, otherwise
 	// having an underscore in that spot
 	public void initializeGuessesArray() {
@@ -63,6 +66,14 @@ public class Hangman {
 			notGuessedArray[i] = '_';
 			//System.out.print(notGuessedArray[i] + " ");
 		}
+	}
+
+	public void printTheRandomWordArray() {
+		System.out.print("The word was: ");
+		for (int i = 0; i < randomWord.length(); i++) {
+			System.out.print(theRandomWord[i]);
+		}
+		System.out.println("\n");
 	}
 
 	public void correctGuessesArray() {
@@ -99,6 +110,7 @@ public class Hangman {
 			searchForThatLetter();
 			printMisses();
 		}
+		printTheRandomWordArray();
 		System.out.println("\nYou win!");
 
 	}
