@@ -11,9 +11,10 @@ public class Hangman {
 	char[] letterMisses = new char[numberOfMissesAllowed];
 	char[] theRandomWord;
 	char[] notGuessedArray;
+	int correctGuesses = 0;
 
 	public void chooseRandomWord() {
-		String[] randomWords = {"helicoptor", "library", "incapacitate"};
+		String[] randomWords = {"television", "fortitude", "sanguine", "cardio", "computer", "engineer"};
 		int numberOfChoices = randomWords.length;
 
 		int randomNumber = rng.nextInt(numberOfChoices);
@@ -22,7 +23,7 @@ public class Hangman {
 	}
 
 	public void askForALetter() {
-		System.out.print("Guess: ");
+		System.out.print("\nGuess: ");
 		guessedLetter = myScanner.next().charAt(0);
 	}
 
@@ -33,15 +34,17 @@ public class Hangman {
 				wasItFound = true;
 				System.out.println("The letter was found");
 				notGuessedArray[i] = guessedLetter;
+				correctGuesses = correctGuesses + 1;
 			}
 		}
 		if (wasItFound == false) {
 			numberOfMisses = numberOfMisses + 1;
 			if (numberOfMisses >= numberOfMissesAllowed) {
 				System.out.println("\nYou lose, dumbass!");
+				System.exit(0);
 			}
 			else {
-				System.out.println("Not one of the letters");
+				System.out.println("\nNot one of the letters");
 				letterMisses[numberOfMisses - 1] = guessedLetter;
 			}
 		}
@@ -74,18 +77,29 @@ public class Hangman {
 		for (int i = 0; i < numberOfMisses; i++) {
 			System.out.print(letterMisses[i] + " ");
 		}
-		System.out.print("\n");
+		System.out.println("\n");
+	}
+
+	public boolean enoughCorrectGuesses() {
+		if (correctGuesses == randomWord.length()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public void playGame() {
 		chooseRandomWord();
 		randomWordToArray();
 		initializeGuessesArray();
-		while (true) {
+		while (enoughCorrectGuesses() == false) {
+			correctGuessesArray();
 			askForALetter();
 			searchForThatLetter();
-			correctGuessesArray();
+			printMisses();
 		}
+		System.out.println("\nYou win!");
 
 	}
 
