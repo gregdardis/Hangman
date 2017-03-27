@@ -116,7 +116,7 @@ public class Hangman {
 		return false;
 	}
 
-	private static String chooseDifficultyLevel() {
+	public static String chooseDifficultyLevel() {
         Scanner myScanner = new Scanner(System.in);
         String difficultyLevel;
 		System.out.println("Choose a difficulty level. Your choices are \"easy\", \"medium\", or \"hard\"");
