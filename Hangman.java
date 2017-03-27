@@ -21,16 +21,21 @@ public class Hangman {
 	}
 
     private int determineDifficultyLevel(String difficultyLevel) {
-        if (difficultyLevel.equals("easy")) {
-			return 8;
-		}
-		else if (difficultyLevel.equals("medium")) {
-            return 6;
-		}
-		else if (difficultyLevel.equals("hard")) {
-			return 5;
-		}
-        return 6;
+        while(true) {
+            if (difficultyLevel.equals("easy")) {
+    			return 8;
+    		}
+    		else if (difficultyLevel.equals("medium")) {
+                return 6;
+    		}
+    		else if (difficultyLevel.equals("hard")) {
+    			return 5;
+    		}
+            else {
+                System.out.println("That is not a choice, try again");
+                difficultyLevel = chooseDifficultyLevel();
+            }
+        }
     }
 
 	private void chooseRandomWord() {
