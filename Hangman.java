@@ -7,41 +7,60 @@ public class Hangman {
 	char guessedLetter;
 	String randomWord;
 	int numberOfMisses = 0;
-	int numberOfMissesAllowed = 8;
-	char[] letterMisses = new char[numberOfMissesAllowed];
+    int numberOfMissesAllowed;
+	char[] letterMisses;
 	char[] theRandomWord;
-	char[] notGuessedArray;
+    char[] notGuessedArray;
 	int correctGuesses = 0;
+	// add as many or few words as you want here
+	String[] randomWords = {"verisimilitude", "whey", "sharpener", "refrigerator", "earbuds", "spectacles", "illumination"};
 
-	public void chooseRandomWord() {
-		String[] randomWords = {"television", "fortitude", "sanguine", "cardio", "computer", "engineer"};
+	public Hangman(String difficultyLevel) {
+		numberOfMissesAllowed = determineDifficultyLevel(difficultyLevel);
+		letterMisses = new char[numberOfMissesAllowed];
+	}
+
+    private int determineDifficultyLevel(String difficultyLevel) {
+        if (difficultyLevel.equals("easy")) {
+			return 8;
+		}
+		else if (difficultyLevel.equals("medium")) {
+            return 6;
+		}
+		else if (difficultyLevel.equals("hard")) {
+			return 5;
+		}
+        return 6;
+    }
+
+	private void chooseRandomWord() {
 		int numberOfChoices = randomWords.length;
-
 		int randomNumber = rng.nextInt(numberOfChoices);
+
 		randomWord = randomWords[randomNumber];
 		theRandomWord = new char[randomWord.length()];
 	}
 
-	public void askForALetter() {
+	private void askForALetter() {
 		System.out.print("\nGuess: ");
 		guessedLetter = myScanner.next().charAt(0);
 	}
 
-	public void searchForThatLetter() {
+	private void searchForThatLetter() {
 		boolean wasItFound = false;
 		for (int i = 0; i < randomWord.length(); i++) {
 			if (guessedLetter == randomWord.charAt(i)) {
 				wasItFound = true;
-				System.out.println("The letter was found");
 				notGuessedArray[i] = guessedLetter;
 				correctGuesses = correctGuesses + 1;
 			}
 		}
-		if (wasItFound == false) {
+		if (!wasItFound) {
 			numberOfMisses = numberOfMisses + 1;
 			if (numberOfMisses >= numberOfMissesAllowed) {
-				System.out.println("\nYou lose, dumbass!");
-				printTheRandomWordArray();
+				System.out.println("\nYou ran out of misses!");
+				System.out.println("You lose!");
+				tellUserTheWord();
 				System.exit(0);
 			}
 			else {
@@ -52,38 +71,32 @@ public class Hangman {
 	}
 
 	// make an array of chars with the letters of the randomWord string
-	public void randomWordToArray() {
+	private void convertRandomWordToArray() {
 		for (int i = 0; i < randomWord.length(); i++) {
 			theRandomWord[i] = randomWord.charAt(i);
 		}
 	}
 
-	// make an array of chars showing their correct guesses, otherwise
-	// having an underscore in that spot
-	public void initializeGuessesArray() {
+	private void initializeGuessesArray() {
 		notGuessedArray = new char[randomWord.length()];
 		for (int i = 0; i < randomWord.length(); i++) {
 			notGuessedArray[i] = '_';
-			//System.out.print(notGuessedArray[i] + " ");
 		}
 	}
 
-	public void printTheRandomWordArray() {
-		System.out.print("The word was: ");
-		for (int i = 0; i < randomWord.length(); i++) {
-			System.out.print(theRandomWord[i]);
-		}
-		System.out.println("\n");
+	private void tellUserTheWord() {
+		System.out.println("The word was: " + randomWord);
 	}
 
-	public void correctGuessesArray() {
-		for (int i = 0; i < randomWord.length(); i++) {
+	// make an array of chars showing their correct guesses, otherwise
+	// having an underscore in that spot
+	private void correctGuessesArray() {
+		for (int i = 0; i < notGuessedArray.length; i++) {
 			System.out.print(notGuessedArray[i] + " ");
-			//System.out.print(notGuessedArray[i] + " ");
 		}
 	}
 
-	public void printMisses() {
+	private void printMisses() {
 		System.out.print("Misses: ");
 		for (int i = 0; i < numberOfMisses; i++) {
 			System.out.print(letterMisses[i] + " ");
@@ -91,36 +104,45 @@ public class Hangman {
 		System.out.println("\n");
 	}
 
-	public boolean enoughCorrectGuesses() {
+	private boolean enoughCorrectGuesses() {
 		if (correctGuesses == randomWord.length()) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
+	}
+
+	private static String chooseDifficultyLevel() {
+        Scanner myScanner = new Scanner(System.in);
+        String difficultyLevel;
+		System.out.println("Choose a difficulty level. Your choices are \"easy\", \"medium\", or \"hard\"");
+		System.out.print("Difficulty: ");
+		difficultyLevel = myScanner.nextLine();
+
+		return difficultyLevel;
 	}
 
 	public void playGame() {
 		chooseRandomWord();
-		randomWordToArray();
+		convertRandomWordToArray();
+
+		System.out.println("\nYou are only allowed " + numberOfMissesAllowed + " missed letters. Guess carefully!");
 		initializeGuessesArray();
-		while (enoughCorrectGuesses() == false) {
+
+		while (!enoughCorrectGuesses()) {
 			correctGuessesArray();
 			askForALetter();
 			searchForThatLetter();
 			printMisses();
 		}
-		printTheRandomWordArray();
+		tellUserTheWord();
 		System.out.println("\nYou win!");
 
 	}
 
 	public static void main(String[] args) {
-		Hangman hangmanGame = new Hangman();
+		Hangman hangmanGame = new Hangman(chooseDifficultyLevel());
 
 		hangmanGame.playGame();
 	}
 
 }
-
-// REARRANGE PLAYGAME SO SHIT HAPPENS IN THE RIGHT ORDER
